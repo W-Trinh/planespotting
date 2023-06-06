@@ -95,7 +95,7 @@ const Gradient = {
 
 var gradient = Gradient.generate("#40FF33","#FF3333",100);
 
-async function getQuartier() {
+async function getNeighborhood() {
     const response = await fetch('https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=recensement-population-2019-grands-quartiers-population&q=&rows=61');
     const myJson = await response.json(); 
 
@@ -123,15 +123,16 @@ async function getQuartier() {
     return data
 }
 
-async function placeQuartier(){
-    const data = await getQuartier()
+async function placeNeighborhood(){
+    const data = await getNeighborhood()
     const min = 1000
     const max = 18000
 
-    data.forEach(quartier =>{
-        var percent = ( ( ( (quartier["population"] - min) * 100 ) / (max - min) ) );
 
-        poly = L.polygon(quartier["polygon"],{color: gradient[ Math.floor(percent-1) ]}).bindPopup(quartier["quartier"] + " : " + quartier["population"]).addTo(map);
+    data.forEach(quartier =>{
+        const percent = ( ( ( (quartier["population"] - min) * 100 ) / (max - min) ) );
+
+        L.polygon(quartier["polygon"],{color: gradient[ Math.floor(percent-1) ]}).bindPopup(quartier["quartier"] + " : " + quartier["population"]).addTo(nbgh);
     }
     )
 }
