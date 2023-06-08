@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+    <style>
+        #map {position: absolute; top: 150;bottom: 0; left: 0; right: 0;}
+        button{
+			background: rgb(8, 184, 96);
+			color:#fff;
+			border: none;
+			padding:10px 20px;
+            width: 300;
+            height: 100;
+            z-index: 100;
+		}
+    </style>
+</head>
+<body>
+    <button onclick="onDownload()">Download</button>
+    <div id = "map"></div>
+    <script src="leaflet-heatmap.js"></script>
+    <script src="collect_elevation_data.js"></script>
+    <script>
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        const Gradient = {
+            inputA : '',
+            inputB : '',
+            inputC : '',
+            gradientElement : '',
+            
+            // Convert a hex color to an RGB array e.g. [r,g,b]
+            // Accepts the following formats: FFF, FFFFFF, #FFF, #FFFFFF
+            hexToRgb : function(hex){
+                var r, g, b, parts;
+                // Remove the hash if given
+                hex = hex.replace('#', '');
+                // If invalid code given return white
+                if(hex.length !== 3 && hex.length !== 6){
+                    return [255,255,255];
+                }
+                // Double up charaters if only three suplied
+                if(hex.length == 3){
+                    hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+                }
+                // Convert to [r,g,b] array
+                r = parseInt(hex.substr(0, 2), 16);
+                g = parseInt(hex.substr(2, 2), 16);
+                b = parseInt(hex.substr(4, 2), 16);
+
+                return [r,g,b];
+            },
+            
+            // Converts an RGB color array e.g. [255,255,255] into a hexidecimal color value e.g. 'FFFFFF'
+            rgbToHex : function(color){
+                // Set boundries of upper 255 and lower 0
+                color[0] = (color[0] > 255) ? 255 : (color[0] < 0) ? 0 : color[0];
+                color[1] = (color[1] > 255) ? 255 : (color[1] < 0) ? 0 : color[1];
+                color[2] = (color[2] > 255) ? 255 : (color[2] < 0) ? 0 : color[2];
+                
+                return this.zeroFill(color[0].toString(16), 2) + this.zeroFill(color[1].toString(16), 2) + this.zeroFill(color[2].toString(16), 2);
+            },
+            
+            // Pads a number with specified number of leading zeroes
+            zeroFill : function( number, width ){
+                width -= number.toString().length;
+                if ( width > 0 ){
+                    return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
+                }
+                return number;
+            },
+
+            // Generates an array of color values in sequence from 'colorA' to 'colorB' using the specified number of steps
+            generate : function(colorA, colorB, steps){
+                var result = [], rInterval, gInterval, bInterval;
+                
+                colorA = this.hexToRgb(colorA); // [r,g,b]
+                colorB = this.hexToRgb(colorB); // [r,g,b]
+                steps -= 1; // Reduce the steps by one because we're including the first item manually
+                
+                // Calculate the intervals for each color
+                rStep = ( Math.max(colorA[0], colorB[0]) - Math.min(colorA[0], colorB[0]) ) / steps;
+                gStep = ( Math.max(colorA[1], colorB[1]) - Math.min(colorA[1], colorB[1]) ) / steps;
+                bStep = ( Math.max(colorA[2], colorB[2]) - Math.min(colorA[2], colorB[2]) ) / steps;
+            
+                result.push( '#'+this.rgbToHex(colorA) );
+                
+                // Set the starting value as the first color value
+                var rVal = colorA[0],
+                    gVal = colorA[1],
+                    bVal = colorA[2];
+            
+                // Loop over the steps-1 because we're includeing the last value manually to ensure it's accurate
+                for (var i = 0; i < (steps-1); i++) {
+                    // If the first value is lower than the last - increment up otherwise increment down
+                    rVal = (colorA[0] < colorB[0]) ? rVal + Math.round(rStep) : rVal - Math.round(rStep);
+                    gVal = (colorA[1] < colorB[1]) ? gVal + Math.round(gStep) : gVal - Math.round(gStep);
+                    bVal = (colorA[2] < colorB[2]) ? bVal + Math.round(bStep) : bVal - Math.round(bStep);
+                    result.push( '#'+this.rgbToHex([rVal, gVal, bVal]) );
+                };
+                
+                result.push( '#'+this.rgbToHex(colorB) );
+                
+                return result;
+            },
+            
+            render : function(colorA, colorB, list){
+                var list = (typeof list === 'object') ? list : document.querySelector(list);
+                
+                var listItems = list.children,
+                    steps  = listItems.length,
+                    colors = Gradient.generate(colorA, colorB, steps);
+
+                for (var i = 0; i < listItems.length; i++) {
+                    var item = listItems[i];
+                    item.style.backgroundColor = colors[i];
+                };
+            }
+        }
+        
+        var gradient = Gradient.generate("#40FF33","#FF3333",100)
+
+        
+        var cfg = {
+            // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+            // if scaleRadius is false it will be the constant radius used in pixels
+            "radius": 2,
+            "maxOpacity": 1,
+            // scales the radius based on map zoom
+            "scaleRadius": true,
+            // if set to false the heatmap uses the global maximum for colorization
+            // if activated: uses the data maximum within the current map boundaries
+            //   (there will always be a red spot with useLocalExtremas true)
+            "useLocalExtrema": true,
+            // which field name in your data represents the latitude - default "lat"
+            latField: 'lat',
+            // which field name in your data represents the longitude - default "lng"
+            lngField: 'lng',
+            // which field name in your data represents the data value - default "value"
+            valueField: 'intensity'
+        };
+
+
+        //var heatmapLayer = new HeatmapOverlay(cfg);
+
+        //console.log(points_elevation)
+
+        var map = L.map('map', {
+            center: [43.60058737045903, 1.4407218792739667],
+            zoom: 14
+        });
+        
+        L.tileLayer('https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=Xcj0EoRZaKvfdhgrIsAb', {maxZoom: 19}).addTo(map);
+
+        // var heat = L.heatLayer(
+        //     points_elevation, 
+        //     {
+        //         minOpacity:50.0,
+        //         max:1.0,
+        //         radius: 10,
+        //         gradient:{
+        //             0.4: 'blue', 
+        //             0.65: 'lime',
+        //             1: 'red'
+        //         }
+        //     }).addTo(map);
+
+        
+        
+    </script>
+</body>
+</html>
