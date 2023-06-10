@@ -5,7 +5,6 @@ const LON_MAX = 1.632497
 const NB_SAMPLE = 3000
 const SAMPLE_DIST_LAT = ( LAT_MAX - LAT_MIN ) / NB_SAMPLE
 const SAMPLE_DIST_LON = ( LON_MAX - LON_MIN ) / NB_SAMPLE
-const MAX_LOOP_ALLOWED = 200
 
 let lowest_alt  = 1000;
 let highest_alt = 0;
@@ -112,7 +111,7 @@ function fect_per_index(index) {
                             [
                                 parseFloat(value["lat"]), 
                                 parseFloat(value["lon"]),
-                                percent
+                                alti
                             ]
                         )
                     } 
@@ -174,26 +173,3 @@ async function gather_geo_data(from=0, to=NB_SAMPLE) {
 }
 
 
-//helpers
-
-function load_from_json(path) {
-    elevation_dataset = []
-    fetch(path)
-        .then ( (response) => response.json()             )
-        .then ( (data) => elevation_dataset.push(...data) )
-        .catch( (err) => console.log(err)                 )
-    console.log(elevation_dataset)
-}
-
-function download(content, fileName, contentType) {
-    const a = document.createElement("a");
-    const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
-}
-
-function onDownload() {
-    download(JSON.stringify(elevation_dataset), "toulouse_elevation_data.json", "text/plain");
-    download(JSON.stringify(index_error_503  ), "index_fails.json"            , "text/plain");
-}

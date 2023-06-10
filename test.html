@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-    crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script src="./libs/leaflet-heatmap.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script>
+    <script src="./js_modules/helper.js"></script>
+    <script src="./js_modules/points_in_polygon.js"></script>
+    <script src="./js_modules/collect_elevation_data.js"></script>
+    <script src="./js_modules/collect_espace_vert.js"></script>
+    <script defer src="main.js"></script>
+    
     <style>
-        #map {position: absolute; top: 150;bottom: 0; left: 0; right: 0;}
-        button{
+        body {margin: 0;}
+        #map {position: absolute; top: 0;bottom: 0; left: 0; right: 0;}
+        button {
 			background: rgb(8, 184, 96);
 			color:#fff;
 			border: none;
@@ -17,31 +22,29 @@
             width: 300;
             height: 100;
             z-index: 100;
+            display: none;
 		}
+        #loading-div {
+            z-index: 1000;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        #loading-text {
+            color: #fff;
+            font-weight: 900;
+            font-size: xx-large;
+        }
     </style>
 </head>
 <body>
     <button onclick="onDownload()">Download</button>
     <div id = "map"></div>
-    <script src="leaflet-heatmap.js"></script>
-    <script src="collect_elevation_data.js"></script>
-    <script src="collect_espace_vert.js"></script>
-    <script>
-        const sleep = ms => new Promise(r => setTimeout(r, ms));
-        
-        var map = L.map('map', {
-            center: [43.60058737045903, 1.4407218792739667],
-            zoom: 14
-        });
-        L.tileLayer('https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=Xcj0EoRZaKvfdhgrIsAb', {maxZoom: 19}).addTo(map);
-
-        collect_espaces_verts()
-
-            
-        
-        
-
-        
-    </script>
+    <div id = "loading-div"> <div id = "loading-text">CHARGEMENT...</div> </div>
+    
 </body>
 </html>
