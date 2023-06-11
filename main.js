@@ -2,8 +2,6 @@
 const GREEN_SPACES_GRADIENT  = Gradient.generate("#40FF33","#FF3333",101)
 const NEIGHBORHOODS_GRADIENT = Gradient.generate("#6BCFF6","#FCB814",101)
 const MAX_LOOP_ALLOWED = 10
-const MAX_ALTITUDE = 300
-const MIN_ALTITUDE = 100
 let keep_collecting_flights = true
 
 //draw parameters
@@ -14,8 +12,11 @@ let draw_center_most_point_green_spaces = false
 //html elements
 const loading_overlay = document.getElementById('loading-div')
 const alerte_credit   = document.getElementById('alerte-credit')
-const toggle_loading = (bool) => {if(bool){loading_overlay.style.display="flex" }else{loading_overlay.style.display = "none"}} 
-const toggle_alerte  = (bool) => {if(bool){loading_overlay.style.display="block"}else{loading_overlay.style.display = "none"}}
+const legend          = document.getElementById('legend')
+const toggle_loading = (bool)   => {if(bool){loading_overlay.style.display="flex" }else{loading_overlay.style.display = "none"}} 
+const toggle_alerte  = (bool)   => {if(bool){loading_overlay.style.display="block"}else{loading_overlay.style.display = "none"}}
+const toggle_legend  = (height) => {if(height === "35px"){legend.style.height="300px"; legend.style.width="300px"}else{legend.style.height="35px"; legend.style.width="120px"}}
+legend.addEventListener("click", () => toggle_legend(getComputedStyle(legend).height));
 //data storage
 const FILE_NAME_GREEN_SPACES  = "green_spaces.json"
 const FILE_NAME_NEIGHBORHOODS = "neighborhoods.json"
