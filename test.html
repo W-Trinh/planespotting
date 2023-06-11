@@ -3,27 +3,35 @@
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-    <script src="./libs/leaflet-heatmap.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script>
-    <script src="./js_modules/helper.js"></script>
-    <script src="./js_modules/points_in_polygon.js"></script>
-    <script src="./js_modules/collect_elevation_data.js"></script>
-    <script src="./js_modules/collect_espace_vert.js"></script>
+    <!-- <script src="./libs/leaflet-heatmap.js"></script> -->
+    <!-- <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script> -->
+    <script src="./libs/arc.js"></script>
+    <script src="./js/helper.js"></script>
+    <script src="./js/points_in_polygon.js"></script>
+    <script src="./js/collect_elevation_data.js"></script>
+    <script src="./js/collect_green_spaces.js"></script>
+    <script src="./js/collect_flights.js"></script>
+    <script src="./js/collect_population_neighborhood.js"></script>
     <script defer src="main.js"></script>
     
     <style>
         body {margin: 0;}
-        #map {position: absolute; top: 0;bottom: 0; left: 0; right: 0;}
         button {
-			background: rgb(8, 184, 96);
+            background: rgb(8, 184, 96);
+            position: absolute;
 			color:#fff;
 			border: none;
 			padding:10px 20px;
-            width: 300;
+            width: 400;
             height: 100;
-            z-index: 100;
-            display: none;
+            top: 50;
+            z-index: 1000;
+            text-align: center;
+            display: flex;
 		}
+        #b1 { left: 50px }
+        #b2 { left: 220px}
+        #b3 { left: 430px}
         #loading-div {
             z-index: 1000;
             position: absolute;
@@ -39,12 +47,36 @@
             font-weight: 900;
             font-size: xx-large;
         }
-    </style>
+        #alerte-credit {
+            width: 100%;
+            height: 100%;
+            background-color: red;
+            opacity: 0.6;
+            z-index: 1000;
+            display: none;
+            position: absolute;
+            text-align: center;
+            color: white;
+            font-size: 100px;
+            padding-top: 50%;
+            top: 0;
+            left: 0;
+        }
+        #map {position: absolute; top: 0;bottom: 0; left: 0; right: 0;}
+        .my-label {
+            position: absolute;
+            width:20px;
+            font-size:8px;
+        }
+        </style>
 </head>
 <body>
-    <button onclick="onDownload()">Download</button>
+    <button id="b1" onclick="store_data_to_files()">Download apis data</button>
+    <button id="b2" onclick="collect_flights()">Start collecting flights pos</button>
+    <button id="b3" onclick="keep_collecting_flights = !keep_collecting_flights">start/stop collecting flights</button>
     <div id = "map"></div>
-    <div id = "loading-div"> <div id = "loading-text">CHARGEMENT...</div> </div>
+    <div id = "loading-div"> <div id = "loading-text">CHARGEMENT...</div> </div>7
+    <div id="alerte-credit" > crédit dépassé !! </div>
     
 </body>
 </html>
