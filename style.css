@@ -55,7 +55,6 @@ button {
     font-size:8px;
 }
 
-
 .legend {
     z-index: 1000;
     position: absolute;
@@ -73,6 +72,7 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    transition: width 0.5s, height 0.5s;
 }
 .legend-spacer {
     width: 100%;
@@ -83,6 +83,9 @@ button {
     font-size: 25px;
     font-weight: bolder;
     height: 35px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 .legend-section {
     margin: 0 0 0 0;
@@ -96,6 +99,9 @@ button {
     margin: 0 0 0 20px;
     width: 100%;
     text-align: left;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 .legend-section-content {
     margin: 0 0 0 0;
@@ -142,7 +148,10 @@ button {
 .legend-section-item-text {
     text-align: left;
     padding: 0 0 0 6px;
-    width: 70%
+    width: 70%;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 .gradient {
     margin: 0 0 0 0;
@@ -155,6 +164,9 @@ button {
     width: 100%;
     display: flex;
     flex-direction: row;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 }
 .gradient-value {
     margin: 0 0 0 0;
