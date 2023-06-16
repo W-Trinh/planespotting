@@ -114,7 +114,7 @@ async function draw_layers() {
     draw_green_spaces()
     draw_flights()
     //trucs rouges
-    draw_probes_of(20)
+    //draw_probes_of(20)
 }
 
 //logique de chargement et affichage des données
@@ -126,7 +126,7 @@ async function init() {
     toggle_loading(false)
     //store_data_to_files()
     draw_layers()
-    
+    mark_green_spaces(GREEN_SPACES, NEIGHBORHOODS)
 }
 
 init()
