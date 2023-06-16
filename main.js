@@ -14,7 +14,7 @@ const loading_overlay = document.getElementById('loading-div')
 const alerte_credit   = document.getElementById('alerte-credit')
 const legend          = document.getElementById('legend')
 const toggle_loading = (bool)   => {if(bool){loading_overlay.style.display="flex" }else{loading_overlay.style.display = "none"}} 
-const toggle_alerte  = (bool)   => {if(bool){loading_overlay.style.display="block"}else{loading_overlay.style.display = "none"}}
+const toggle_alerte  = (bool)   => {if(bool){alerte_credit.style.display="block"}else{alerte_credit.style.display = "none"}}
 const toggle_legend  = (height) => {if(height === "35px"){legend.style.height="300px"; legend.style.width="300px"}else{legend.style.height="35px"; legend.style.width="120px"}}
 legend.addEventListener("click", () => toggle_legend(getComputedStyle(legend).height));
 //data storage
@@ -37,19 +37,22 @@ const mrkr_lbl = L.layerGroup()
 const flgt_pos = L.layerGroup()
 //flights curved path layer
 const flgt_pth = L.layerGroup()
+//flight path probes 
+const flgt_prb = L.layerGroup()
 
 const overlayMaps = {
     "labels et markers": mrkr_lbl,
     "flights points": flgt_pos,
     "fligths trajectories": flgt_pth,
     "Green spaces avg altitude": grsp_ava,
-    "Neighborhood population": nbgh_pop
+    "Neighborhood population": nbgh_pop,
+    "flights trajectories probes" : flgt_prb
 }
 
 const map = L.map('map', {
     center: [43.60058737045903, 1.4407218792739667],
     zoom: 14,
-    layers: [base_map, mrkr_lbl, flgt_pos, flgt_pth, grsp_ava, nbgh_pop]
+    layers: [base_map, mrkr_lbl, flgt_prb, flgt_pos, flgt_pth, grsp_ava, nbgh_pop]
 });
 
 const layerControl = L.control.layers({}, overlayMaps).addTo(map)
@@ -109,9 +112,9 @@ function store_data_to_files() {
 async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
-    draw_flights()
+    //draw_flights()
+    draw_probes_of(20)
 }
-
 
 //logique de chargement et affichage des données
 
@@ -122,6 +125,7 @@ async function init() {
     toggle_loading(false)
     //store_data_to_files()
     draw_layers()
+    
 }
 
 init()

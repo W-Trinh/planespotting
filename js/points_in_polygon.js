@@ -73,11 +73,11 @@ function remove_points_outside_polygon_boundaries(points, polygon, draw=false, d
 
 function closest_point_to_center(points, boundaries, draw=false, debug=false) {
     let center = [
-        boundaries["min_x"] + (boundaries["max_x"] - boundaries["min_x"]) / 2, 
-        boundaries["min_y"] + (boundaries["max_y"] - boundaries["min_y"]) / 2
+        boundaries["min_y"] + (boundaries["max_y"] - boundaries["min_y"]) / 2,
+        boundaries["min_x"] + (boundaries["max_x"] - boundaries["min_x"]) / 2
     ]
     //console.log(center)
-    if (draw) L.circle([center[1], center[0]], 3, {color:'yellow'}).addTo(map);
+    if (draw) L.circle([center[0], center[1]], 3, {color:'yellow'}).addTo(map);
     let most_centered_point_yet = points[0]
     let smallest_distance_yet = 100000
     for (const point of points) {
@@ -87,7 +87,7 @@ function closest_point_to_center(points, boundaries, draw=false, debug=false) {
             smallest_distance_yet   = dist
         }
     }
-    if (draw) L.circle([most_centered_point_yet[1], most_centered_point_yet[0]], 3).addTo(map);
+    if (draw) L.circle([most_centered_point_yet[0], most_centered_point_yet[1]], 3).addTo(map);
     return most_centered_point_yet
 }
 
@@ -150,7 +150,7 @@ async function get_average_altitude_of_polygon(polygon, draw=false, debug=false)
             }
 
             //console.log(rpopb)
-            if (rpopb.length > 0) center = closest_point_to_center(rpopb, prb, draw=false) 
+            if (rpopb.length > 0) center = closest_point_to_center(rpopb, prb, draw=true) 
 
             sampled_points = sampled_points.concat(rpopb)
         }
