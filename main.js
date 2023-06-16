@@ -112,7 +112,8 @@ function store_data_to_files() {
 async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
-    //draw_flights()
+    draw_flights()
+    //trucs rouges
     draw_probes_of(20)
 }
 

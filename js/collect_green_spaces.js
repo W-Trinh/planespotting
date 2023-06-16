@@ -70,7 +70,7 @@ function draw_green_spaces() {
     for (const green_space of GREEN_SPACES) {
         const shape = green_space.green_space.fields.geo_shape;
         const fields = green_space.green_space.fields;
-        const popupContent = `<strong>${fields.nom}</strong><br>Type: ${fields.type} <br>Altitude moyenne: ${green_space.avg_altitude} m   ` //<br>Surface: ${fields.surface_m2} m²`;
+        const popupContent = `<strong>${fields.nom}</strong><br>Type: ${fields.type} <br>Altitude moyenne: ${green_space.avg_altitude} m  <br>Surface: ${fields.surface_m2} m²`;
         const color = GREEN_SPACES_GRADIENT[percent_on_range(green_space.avg_altitude, ALTITUDES_RANGE[0], ALTITUDES_RANGE[1])]
         // if (green_space.green_space.fields.surface_m2 > 6.0) {
         //     //console.log(green_space.surface)

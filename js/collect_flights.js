@@ -79,7 +79,7 @@ async function draw_probes_of(limit) {
         //if (cpt != limit) continue
 
         let points = FLIGHTS[icao24]["positions"].map(triplet => [triplet[0], triplet[1]])
-        DRAWED_FLIGHTS[icao24] = add_polyline_on_map(points, flgt_prb)
+        //DRAWED_FLIGHTS[icao24] = add_polyline_on_map(points, flgt_prb)
         
         let precision = 5
         let distance  = 1500
@@ -88,25 +88,6 @@ async function draw_probes_of(limit) {
         let probes = get_probs_from_flight_path(sub_divs, 30, 1500)
         console.log(probes.length)
 
-
-        
-
-            
-            // for (const sub_poly of green_space.green_space.fields.geo_shape.coordinates[0]) {
-            //     if (found) break
-            //     for (const point of sub_poly) {
-            //         let d1 = distance_between_points(point, sub_div)
-            //         console.log(d1)
-            //         if ( d1 < distance ) {
-            //             //add_marker_on_map(green_space.center_most_point, flgt_prb)
-            //             add_polyline_on_map([green_space.center_most_point, sub_div], flgt_prb, 'red')
-            //             found = true
-            //         }
-            //         console.log(found)
-            //         if (found) break
-            //     }
-            // }   
-        
 
         for (const sub_div of sub_divs) {
             for (const green_space of GREEN_SPACES) {
@@ -120,7 +101,7 @@ async function draw_probes_of(limit) {
                         let lon = Math.max(green_space.center_most_point[1], green_space.center_most_point[0])
                         let center = [lon, lat]
                         let dist = distance_between_points(center, sub_div)*1000
-                        if (dist < 1000) {
+                        if (dist < distance) {
                             add_polyline_on_map([center, sub_div], flgt_prb, {color: 'red', opacity: 0.2})
                         }
                     } catch (error) {
