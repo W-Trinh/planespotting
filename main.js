@@ -13,10 +13,32 @@ let draw_center_most_point_green_spaces = false
 const loading_overlay = document.getElementById('loading-div')
 const alerte_credit   = document.getElementById('alerte-credit')
 const legend          = document.getElementById('legend')
+const filtres          = document.getElementById('filtre')
+
 const toggle_loading = (bool)   => {if(bool){loading_overlay.style.display="flex" }else{loading_overlay.style.display = "none"}} 
 const toggle_alerte  = (bool)   => {if(bool){alerte_credit.style.display="block"}else{alerte_credit.style.display = "none"}}
 const toggle_legend  = (height) => {if(height === "35px"){legend.style.height="300px"; legend.style.width="300px"}else{legend.style.height="35px"; legend.style.width="120px"}}
+const toggle_filtre  = (height) => {if(height === "35px"){filtres.style.height="fit-content"; filtres.style.width="300px"} }//else{filtres.style.height="35px"; filtres.style.width="120px"}}
+var sliderNeighboor = document.getElementById('slider');
+var sliderGreenSpacesAltitude = document.getElementById('slider');
+var sliderPlanes = document.getElementById('slider');
+var sliderAngle = document.getElementById('slider');
+
+noUiSlider.create(sliderNeighboor, {
+    start: [4000, 8000],
+    connect : true,
+    range: {
+        'min': 2000,
+        'max': 10000
+    }
+});
+
+
+
+
 legend.addEventListener("click", () => toggle_legend(getComputedStyle(legend).height));
+filtres.addEventListener("click", () => toggle_filtre(getComputedStyle(filtres).height));
+
 //data storage
 const FILE_NAME_GREEN_SPACES  = "green_spaces.json"
 const FILE_NAME_NEIGHBORHOODS = "neighborhoods.json"
