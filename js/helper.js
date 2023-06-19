@@ -93,8 +93,9 @@ function increase_flight_path_sub_divisions(path, precision) {
         for (let i = 0; i < precision; i++) {
             const x = startX + i * increment;
             const y = slope * x + yIntercept;
-            if (isNaN(x) || isNaN(y)) continue
-            sub_divisions.push([x, y]);
+            const z = path[k][2]
+            if (isNaN(x) || isNaN(y) || isNaN(z)) continue
+            sub_divisions.push([x, y, z]);
         }
     }
     return sub_divisions
@@ -117,9 +118,16 @@ function rotate_segment(segment, angle) {
     return [[segment[0][0],segment[0][1]],rotatedEnd];
 }
 
-function toRadians(degrees) {
-    return degrees * (Math.PI / 180);
+function find_angle(A,B,C) {
+    var AB = Math.sqrt(Math.pow(B[0]-A[0],2)+ Math.pow(B[1]-A[1],2));    
+    var BC = Math.sqrt(Math.pow(B[0]-C[0],2)+ Math.pow(B[1]-C[1],2)); 
+    var AC = Math.sqrt(Math.pow(C[0]-A[0],2)+ Math.pow(C[1]-A[1],2));
+    return Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
 }
+
+function toRadians(degrees) {return degrees * (Math.PI / 180)}
+
+function toDegrees(radians) {return radians * (180/Math.PI)}
 
 function convert_segment_length(segment, current, target) {
     // Calculate the scaling factor
@@ -136,7 +144,7 @@ function convert_segment_length(segment, current, target) {
     if (isNaN(endX) || isNaN(endY)) return -1
     // Return the new segment
     return [[startX,startY],[endX,endY]]
-  }
+}
 
 function get_probs_from_flight_path(path, angle, size) {
     let probes = []
@@ -153,78 +161,6 @@ function get_probs_from_flight_path(path, angle, size) {
         probes.push(pos_prob, neg_prob)
     }
     return probes
-}
-
-function isLineCrossingPolygon(line, polygon) {
-    for (let i = 0; i < polygon.length-1; i++) {
-        if(segment_intersection([polygon[i],polygon[i+1]],line)) return true
-        //if(segment_intersection(line,[polygon[i],polygon[i+1]])) return true
-    }
-    if(segment_intersection([polygon[polygon.length-1],polygon[0]],line)) return true
-    //if(segment_intersection(line,[polygon[polygon.length-1],polygon[0]])) return true
-    
-    return false;
-}
-
-const between = (a, b, c) => a - eps <= b && b <= c + eps;
-const segment_intersection = (l1, l2) => {
-    let x1 = l1[0][0]
-    let y1 = l1[0][1]
-    let x2 = l1[1][0]
-    let y2 = l1[1][1]
-    let x3 = l2[0][0]
-    let y3 = l2[0][1]
-    let x4 = l2[1][0]
-    let y4 = l2[1][1]
-
-    var x = ((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4)) /
-            ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
-
-    var y = ((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4)) /
-            ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
-
-    if(
-        (isNaN(x) || isNaN(y)) ||
-        (x1>=x2 && !between(x2, x, x1) || !between(x1, x, x2)) ||
-        (y1>=y2 && !between(y2, y, y1) || !between(y1, y, y2)) ||
-        (x3>=x4 && !between(x4, x, x3) || !between(x3, x, x4)) ||
-        (y3>=y4 && !between(y4, y, y3) || !between(y3, y, y4))
-    ) {
-        return false;
-    }
-
-    return true;
-
-};
-
-function line_circle_intersection(obj1, obj2){
-    // let inside1 = point_circle(new Point(obj1.p1.x, obj1.p1.y), obj2)
-    // let inside2 = point_circle(new Point(obj1.p2.x, obj1.p2.y), obj2)
-
-    // if (inside1 || inside2) return true
-    
-
-    let distX = obj1.x - obj1.x1
-    let distY = obj1.y - obj1.y1
-    let len = Math.sqrt( (distX*distX) + (distY*distY) )
-
-    let dot = ( ((obj2.x-obj1.x)*(obj1.x1-obj1.x)) + ((obj2.y-obj1.y)*(obj1.y1-obj1.y)) ) / Math.pow(len,2)
-
-    let closestX = obj1.x + (dot * (obj1.x1-obj1.x))
-    let closestY = obj1.y + (dot * (obj1.y1-obj1.y))
-
-    let onSegment = point_line(new Point(closestX, closestY), obj1)
-
-    if (!onSegment) return false
-
-    distX = closestX - obj2.x;
-    distY = closestY - obj2.y;
-    let distance = Math.sqrt( (distX*distX) + (distY*distY) );
-
-    if (distance <= r) {
-        return true;
-    }
-    return false;
 }
 
 const Gradient = {

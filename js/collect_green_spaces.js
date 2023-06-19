@@ -9,18 +9,10 @@ async function collect_green_spaces() {
             .then(data => {
                 data.records.forEach( async (record) => {
                         let polygon_data = await get_average_altitude_of_polygon(record)
-                        avg_altitude = polygon_data["average_altitude"]
-                        sampled_points = polygon_data["sampled_points"]
-                        center_most_point = polygon_data["center"]
-                        green_spaces.push({
-                            green_space: record,
-                            avg_altitude: avg_altitude,
-                            sampled_points: sampled_points,
-                            center_most_point : center_most_point,
-                            surface : record.fields.surface_m2
-                        })
+                        let data = format_green_spaces(record, polygon_data)
+                        green_spaces.push(data)
                         if (!isNaN(avg_altitude)) {
-                            let res = update_max_min_alt(avg_altitude, min_alt, max_alt)
+                            let res = update_max_min_alt(data.avg_altitude, min_alt, max_alt)
                             min_alt = res[0]
                             max_alt = res[1] 
                         }
@@ -34,16 +26,8 @@ async function collect_green_spaces() {
         .then(data => {
             data.records.forEach( async record => {
                     let polygon_data = await get_average_altitude_of_polygon(record)
-                    avg_altitude = polygon_data["average_altitude"]
-                    sampled_points = polygon_data["sampled_points"]
-                    center_most_point = polygon_data["center"]
-                    green_spaces.push({
-                        green_space: record,
-                        avg_altitude: avg_altitude,
-                        sampled_points: sampled_points,
-                        center_most_point: center_most_point,
-                        surface : record.fields.surface_m2
-                    })
+                    let data = format_green_spaces(record, polygon_data)
+                    green_spaces.push(data)
                     if (!isNaN(avg_altitude)) {
                         let res = update_max_min_alt(avg_altitude, min_alt, max_alt)
                         min_alt = res[0]
@@ -72,17 +56,6 @@ function draw_green_spaces() {
         const fields = green_space.green_space.fields;
         const popupContent = `<strong>${fields.nom}</strong><br>Type: ${fields.type} <br>Altitude moyenne: ${green_space.avg_altitude} m  <br>Surface: ${fields.surface_m2} m²`;
         const color = GREEN_SPACES_GRADIENT[percent_on_range(green_space.avg_altitude, ALTITUDES_RANGE[0], ALTITUDES_RANGE[1])]
-        // if (green_space.green_space.fields.surface_m2 > 6.0) {
-        //     //console.log(green_space.surface)
-        //     try {
-        //         //console.log(green_space.center_most_point)
-        //         //add_marker_on_map(green_space.center_most_point, flgt_prb)
-        //         add_polyline_on_map()
-        //     } catch (error) {
-        //         console.log(error)
-        //         continue
-        //     }
-        // }
         L.geoJson(shape, 
             {
                 style: {

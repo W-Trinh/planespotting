@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-    <!-- <script src="./libs/leaflet-heatmap.js"></script> -->
-    <!-- <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/"></script> -->
-    <script src="./libs/arc.js"></script>
     <script src="./js/helper.js"></script>
+    <script src="./js/format_data.js"></script>
     <script src="./js/points_in_polygon.js"></script>
-    <script src="./js/collect_elevation_data.js"></script>
     <script src="./js/collect_green_spaces.js"></script>
     <script src="./js/collect_flights.js"></script>
     <script src="./js/collect_population_neighborhood.js"></script>
@@ -20,7 +17,7 @@
     <button id="b2" onclick="collect_flights()">Start collecting flights pos</button>
     <button id="b3" onclick="keep_collecting_flights = !keep_collecting_flights">start/stop collecting flights</button>
     <div id = "map"></div>
-    <div id = "loading-div"> <div id = "loading-text">CHARGEMENT...</div> </div>
+    <div id = "loading-div"> <div id = "loading-text"> CHARGEMENT... </div> </div>
     <div id="alerte-credit" > crédit dépassé !! </div>
 
     <div class="legend" id="legend">

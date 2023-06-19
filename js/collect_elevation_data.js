@@ -24,8 +24,8 @@ let highest_alt = 0;
         }
     }
 */
-let elevation_dataset = {}
-let index_error_503 = []
+let elevation_dataset  = {}
+let index_error_503    = []
 let fetch_resume_table = {}
 
 async function compose_elevation_rows(from=0,to=NB_SAMPLE) {

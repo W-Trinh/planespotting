@@ -65,6 +65,10 @@ map.on('zoomend', function() {
     }
 });
 
+map.on('click', function(e) {
+    console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+});
+
 //collecte des données
 let GREEN_SPACES     = []
 let ALTITUDES_RANGE  = []
@@ -114,7 +118,14 @@ async function draw_layers() {
     draw_green_spaces()
     draw_flights()
     //trucs rouges
-    draw_probes_of(20)
+    //draw_probes_of()
+    draw_link_path_green_space(
+        30, 8000,
+        50, 999999,
+        1000, 1500,
+        15, 80,
+        10
+    )
 }
 
 //logique de chargement et affichage des données

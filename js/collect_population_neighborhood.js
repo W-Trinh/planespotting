@@ -6,21 +6,8 @@ async function collect_neighborhoods() {
     const data = [];
 
     myJson["records"].forEach(quartier =>{
-            const poly = []
-            for (const tabPoint of quartier["fields"]["geo_shape"]["coordinates"]){
-                for (const point of tabPoint){
-                    const np = []
-                    np.push(point[1],point[0])
-                    poly.push(np)
-                }
-            }
-
-            data.push({
-                "quartier": quartier["fields"]["lib_grd_quart"],
-                "population": Math.floor(quartier["fields"]["p19_pop"]),
-                "point":quartier["fields"]["geo_point_2d"],
-                "polygon":poly,
-            })
+            const res = format_neighborhoods(quartier)
+            data.push(res)
         }
     )
     return data
