@@ -119,7 +119,7 @@ async function draw_layers() {
     draw_flights()
     //trucs rouges
     //draw_probes_of()
-    draw_link_path_green_space(
+    rank_green_space_based_on_flight_path(
         30, 8000,
         50, 999999,
         1000, 1500,
