@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nouislider.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="./libs/leaflet_numbered_markers.css">
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
-    <script src="./libs/leaflet_numbered_markers.js"></script>
+    <script src="./js/nouislider.js"></script>
+    <script src="./libs/arc.js"></script>
     <script src="./js/helper.js"></script>
     <script src="./js/format_data.js"></script>
     <script src="./js/ranking.js"></script>
@@ -23,61 +26,108 @@
     <div id = "map"></div>
     <div id = "loading-div"> <div id = "loading-text"> CHARGEMENT... </div> </div>
     <div id="alerte-credit" > crédit dépassé !! </div>
+    <div class="tabs">
+        <div class="filtre" id="filtre">
+            <p class="filtre-title">
+                Filtres
+            </p>
+            <div class="filtre-section">
+                <p class="filtre-section-title">
+                    👩 Neighborhood population 🧑
+                </p>
+                <div class="filtre-section-content">
+                    <div id="slider" class="sliders"></div>
+                </div>
+            </div>
+            <div class="filtre-section">
+                <p class="filtre-section-title">
+                    🌳 Green spaces altitude 🌲
+                </p>
+                <div class="filtre-section-content">
+                    <div id="slider1" class="sliders"></div>
+                </div>
+            </div>
+            <div class="filtre-section">
+                <p class="filtre-section-title">
+                    🛫 Planes altitude 🛬
+                </p>
+                <div class="filtre-section-content">
+                    <div id="slider2" class="sliders"></div>
+                </div>
+            </div>
+            <div class="filtre-section">
+                <p class="filtre-section-title">
+                    🛫 Angle 🛬
+                </p>
+                <div class="filtre-section-content">
+                    <div id="slider3" class="sliders"></div>
+                </div>
+            </div>
+            <div class="filtre-section">
+                <div class="filtre-section-validation">
+                    <span>Nb result</span>
+                    <input id="input-filtre" value="10">
+                    <button id="buttonvalidate">Valider</button>
+                </div>
+            </div>
+        </div>
 
-    <div class="legend" id="legend">
-        <p class="legend-title">
-            Légende
-        </p>
-        <div class="legend-section">
-            <p class="legend-section-title">
-                Neighborhood population
+        <div class="legend" id="legend">
+            <p class="legend-title">
+                Légende
             </p>
-            <div class="legend-section-content">
-                <div id="gradient-population" class="gradient"></div>
-                <div class="gradient-values">
-                    <p class="gradient-value">+25k</p>
-                    <p class="gradient-value">18k</p>
-                    <p class="gradient-value"></p>
-                    <p class="gradient-value">1k</p>
+            <div class="legend-section">
+                <p class="legend-section-title">
+                    Neighborhood population
+                </p>
+                <div class="legend-section-content">
+                    <div id="gradient-population" class="gradient"></div>
+                    <div class="gradient-values">
+                        <p class="gradient-value">+25k</p>
+                        <p class="gradient-value">18k</p>
+                        <p class="gradient-value"></p>
+                        <p class="gradient-value">1k</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="legend-section">
-            <p class="legend-section-title">
-                Green spaces altitude
-            </p>
-            <div class="legend-section-content">
-                <div id="gradient-greenspaces" class="gradient"></div>
-                <div class="gradient-values">
-                    <p class="gradient-value">250m</p>
-                    <p class="gradient-value"></p>
-                    <p class="gradient-value"></p>
-                    <p class="gradient-value">120m</p>
+            <div class="legend-section">
+                <p class="legend-section-title">
+                    Green spaces altitude
+                </p>
+                <div class="legend-section-content">
+                    <div id="gradient-greenspaces" class="gradient"></div>
+                    <div class="gradient-values">
+                        <p class="gradient-value">250m</p>
+                        <p class="gradient-value"></p>
+                        <p class="gradient-value"></p>
+                        <p class="gradient-value">120m</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="legend-spacer"></div>
-        <div class="legend-section">
-            <div class="legend-section-content">
-                <div class="legend-section-item">
-                    <div class="legend-section-item-type"><hr class="item-type-line" id="l-path-planes"></div>
-                    <div class="legend-section-item-text"> passage d'avion</div>
+            <div class="legend-spacer"></div>
+            <div class="legend-section">
+                <div class="legend-section-content">
+                    <div class="legend-section-item">
+                        <div class="legend-section-item-type"><hr class="item-type-line" id="l-path-planes"></div>
+                        <div class="legend-section-item-text"> passage d'avion</div>
+                    </div>
                 </div>
-            </div>
-            <div class="legend-section-content">
-                <div class="legend-section-item">
-                    <div class="legend-section-item-type"><hr class="item-type-color" id="c-no-data"></div>
-                    <div class="legend-section-item-text"> données manquante</div>
+                <div class="legend-section-content">
+                    <div class="legend-section-item">
+                        <div class="legend-section-item-type"><hr class="item-type-color" id="c-no-data"></div>
+                        <div class="legend-section-item-text"> données manquante</div>
+                    </div>
                 </div>
-            </div>
-            <div class="legend-section-content">
-                <div class="legend-section-item">
-                    <div class="legend-section-item-type"><hr class="item-type-square" id="s-boundaries"></div>
-                    <div class="legend-section-item-text"> limite de collecte vols</div>
+                <div class="legend-section-content">
+                    <div class="legend-section-item">
+                        <div class="legend-section-item-type"><hr class="item-type-square" id="s-boundaries"></div>
+                        <div class="legend-section-item-text"> limite de collecte vols</div>
+                    </div>
                 </div>
-            </div>
-            <div class="legend-section-content">
-                
+                <div class="legend-section-content">
+                    
+                    
+                </div>
             </div>
         </div>
     </div>

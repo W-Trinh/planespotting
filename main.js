@@ -13,10 +13,90 @@ let draw_center_most_point_green_spaces = false
 const loading_overlay = document.getElementById('loading-div')
 const alerte_credit   = document.getElementById('alerte-credit')
 const legend          = document.getElementById('legend')
+const filtres          = document.getElementById('filtre')
+
 const toggle_loading = (bool)   => {if(bool){loading_overlay.style.display="flex" }else{loading_overlay.style.display = "none"}} 
 const toggle_alerte  = (bool)   => {if(bool){alerte_credit.style.display="block"}else{alerte_credit.style.display = "none"}}
 const toggle_legend  = (height) => {if(height === "35px"){legend.style.height="300px"; legend.style.width="300px"}else{legend.style.height="35px"; legend.style.width="120px"}}
+const toggle_filtre  = (height) => {if(height === "35px"){filtres.style.height="fit-content"; filtres.style.width="300px"} }//else{filtres.style.height="35px"; filtres.style.width="120px"}}
+
+
+//Sliders
+var sliderNeighboor = document.getElementById('slider');
+var sliderGreenSpacesAltitude = document.getElementById('slider1');
+var sliderPlanes = document.getElementById('slider2');
+var sliderAngle = document.getElementById('slider3');
+
+
+
+var range_sliderNeighboor = {
+    'min': [     1 ],
+    'max': [ 30000 ]
+};
+
+
+noUiSlider.create(sliderNeighboor, {
+    start: [30000, 1],
+    connect : true,
+    range: range_sliderNeighboor,
+    pips: {
+        mode: 'range',
+        density: 3
+    }
+});
+
+var range_sliderGreenSpacesAltitude = {
+    'min': [     120 ],
+    'max': [ 250 ]
+};
+
+noUiSlider.create(sliderGreenSpacesAltitude, {
+    start: [250, 120],
+    connect : true,
+    range: range_sliderGreenSpacesAltitude,
+    pips: {
+        mode: 'range',
+        density: 3
+    }
+});
+
+var range_sliderPlanes = {
+    'min': [     0 ],
+    'max': [ 11000 ]
+};
+
+
+noUiSlider.create(sliderPlanes, {
+    start: [11000, 0],
+    connect : true,
+    range: range_sliderPlanes,
+    pips: {
+        mode: 'range',
+        density: 3
+    }
+});
+
+var range_sliderAngle = {
+    'min': [     0 ],
+    'max': [ 90 ]
+};
+
+
+noUiSlider.create(sliderAngle, {
+    start: [0, 90],
+    connect : true,
+    range: range_sliderAngle,
+    pips: {
+        mode: 'range',
+        density: 3
+    }
+});
+
+
+
 legend.addEventListener("click", () => toggle_legend(getComputedStyle(legend).height));
+filtres.addEventListener("click", () => toggle_filtre(getComputedStyle(filtres).height));
+
 //data storage
 const FILE_NAME_GREEN_SPACES  = "green_spaces.json"
 const FILE_NAME_NEIGHBORHOODS = "neighborhoods.json"
@@ -127,7 +207,7 @@ function pre_populate_rankings() {
 async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
-    draw_flights()
+    //draw_flights()
 
     rank_green_space_based_on_flight_path(
         30, 8000,
