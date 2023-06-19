@@ -163,6 +163,12 @@ function get_probs_from_flight_path(path, angle, size) {
     return probes
 }
 
+function apply_to_dict(dict, func) {
+    for (key in dict) {
+        dict[key] = func(dict[key])
+    }
+}
+
 const Gradient = {
     inputA : '',
     inputB : '',

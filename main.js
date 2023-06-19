@@ -39,6 +39,8 @@ const flgt_pos = L.layerGroup()
 const flgt_pth = L.layerGroup()
 //flight path probes 
 const flgt_prb = L.layerGroup()
+//ranking result layers 
+const rank_lyr = L.layerGroup()
 
 const overlayMaps = {
     "labels et markers": mrkr_lbl,
@@ -46,13 +48,14 @@ const overlayMaps = {
     "fligths trajectories": flgt_pth,
     "Green spaces avg altitude": grsp_ava,
     "Neighborhood population": nbgh_pop,
-    "flights trajectories probes" : flgt_prb
+    "flights trajectories probes" : flgt_prb,
+    "ranking results": rank_lyr
 }
 
 const map = L.map('map', {
     center: [43.60058737045903, 1.4407218792739667],
     zoom: 14,
-    layers: [base_map, mrkr_lbl, flgt_prb, flgt_pos, flgt_pth, grsp_ava, nbgh_pop]
+    layers: [base_map, flgt_pth, grsp_ava, nbgh_pop, rank_lyr]
 });
 
 const layerControl = L.control.layers({}, overlayMaps).addTo(map)
@@ -70,12 +73,14 @@ map.on('click', function(e) {
 });
 
 //collecte des données
-let GREEN_SPACES     = []
-let ALTITUDES_RANGE  = []
-let NEIGHBORHOODS    = []
-let POPULATION_RANGE = [1000, 18000]
-let FLIGHTS          = {}
-let DRAWED_FLIGHTS   = {}
+let GREEN_SPACES       = []
+let ALTITUDES_RANGE    = []
+let NEIGHBORHOODS      = []
+let POPULATION_RANGE   = [1000, 18000]
+let FLIGHTS            = {}
+let DRAWED_FLIGHTS     = {}
+let GREEN_SPACES_RANKS = {}
+let BEST_GREEN_SPACES_MARKERS = []
 
 async function collect_data_from_apis() {
     
@@ -112,19 +117,28 @@ function store_data_to_files() {
     download(JSON.stringify(NEIGHBORHOODS), FILE_NAME_NEIGHBORHOODS, "text/plain");
 }
 
+function pre_populate_rankings() {
+    for (const green_space of GREEN_SPACES) {
+        GREEN_SPACES_RANKS[green_space.green_space.recordid] = {flight_path_count_score: 0, population_density_score: 0, final_score: 0}
+    }
+}
+
 //dessin des informations sur la carte
 async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
     draw_flights()
 
-    // rank_green_space_based_on_flight_path(
-    //     30, 8000,
-    //     50, 999999,
-    //     1000, 1500,
-    //     15, 80,
-    //     10
-    // )
+    rank_green_space_based_on_flight_path(
+        30, 8000,
+        50, 999999,
+        1000, 1500,
+        15, 50,
+        10
+    )
+    rank_green_spaces_based_on_population_density()
+    final_score_evaluation("I_hate_buildings")
+    show_best_green_spaces(15)
 }
 
 //logique de chargement et affichage des données
@@ -133,10 +147,11 @@ async function init() {
     toggle_loading(true)
     //await collect_data_from_apis()
     await collect_data_from_stored_files()
+    pre_populate_rankings()
     toggle_loading(false)
     //store_data_to_files()
     draw_layers()
-    mark_green_spaces(GREEN_SPACES, NEIGHBORHOODS)
+    //mark_green_spaces(GREEN_SPACES, NEIGHBORHOODS)
 }
 
 init()
