@@ -117,15 +117,14 @@ async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
     draw_flights()
-    //trucs rouges
-    //draw_probes_of()
-    rank_green_space_based_on_flight_path(
-        30, 8000,
-        50, 999999,
-        1000, 1500,
-        15, 80,
-        10
-    )
+
+    // rank_green_space_based_on_flight_path(
+    //     30, 8000,
+    //     50, 999999,
+    //     1000, 1500,
+    //     15, 80,
+    //     10
+    // )
 }
 
 //logique de chargement et affichage des données
@@ -137,7 +136,7 @@ async function init() {
     toggle_loading(false)
     //store_data_to_files()
     draw_layers()
-    
+    mark_green_spaces(GREEN_SPACES, NEIGHBORHOODS)
 }
 
 init()
