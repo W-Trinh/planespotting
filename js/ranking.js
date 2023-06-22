@@ -1,6 +1,6 @@
 function rank_green_space_based_on_flight_path(
     flight_path_lower_bound, flight_path_higher_bound,
-    green_space_size_lower_bound, green_space_size_higher_bound,
+    green_space_altitude_lower_bound, green_space_altitude_higher_bound,
     distance_between_green_space_and_flight_lower_bound, distance_between_green_space_and_flight_higher_bound,
     angle_between_green_space_and_flight_lower_bound, angle_between_green_space_and_flight_higher_bound,
     precision=5 ) {
@@ -9,8 +9,8 @@ function rank_green_space_based_on_flight_path(
 
     for (const green_space of GREEN_SPACES) {
         if (green_space.center_most_point === undefined    ) continue
-        if (green_space.green_space.fields.surface_m2 >= green_space_size_lower_bound &&
-            green_space.green_space.fields.surface_m2 >= green_space_size_higher_bound ) continue
+        if (green_space.avg_altitude <= green_space_altitude_lower_bound ||
+            green_space.avg_altitude >= green_space_altitude_higher_bound ) continue
 
         //console.log(green_space.center_most_point)
 
@@ -52,7 +52,6 @@ function rank_green_space_based_on_flight_path(
 
     }
 }
-
 
 function rank_green_spaces_based_on_population_density(){
     let green_spaces  = GREEN_SPACES

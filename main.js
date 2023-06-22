@@ -27,6 +27,16 @@ var sliderGreenSpacesAltitude = document.getElementById('slider1');
 var sliderPlanes = document.getElementById('slider2');
 var sliderAngle = document.getElementById('slider3');
 
+//nb results
+const input_nb_result = document.getElementById('input-filtre')
+
+//ranking method selector
+const method_selector = document.getElementById("ranking-method-selector")
+
+//bouton valider
+const btn_validate    = document.getElementById('buttonvalidate')
+
+btn_validate.addEventListener('click', () => compute_results())
 
 
 var range_sliderNeighboor = {
@@ -36,7 +46,7 @@ var range_sliderNeighboor = {
 
 
 noUiSlider.create(sliderNeighboor, {
-    start: [30000, 1],
+    start: [1, 30000],
     connect : true,
     range: range_sliderNeighboor,
     pips: {
@@ -46,12 +56,12 @@ noUiSlider.create(sliderNeighboor, {
 });
 
 var range_sliderGreenSpacesAltitude = {
-    'min': [     120 ],
-    'max': [ 250 ]
+    'min': [120],
+    'max': [250]
 };
 
 noUiSlider.create(sliderGreenSpacesAltitude, {
-    start: [250, 120],
+    start: [120, 250],
     connect : true,
     range: range_sliderGreenSpacesAltitude,
     pips: {
@@ -67,7 +77,7 @@ var range_sliderPlanes = {
 
 
 noUiSlider.create(sliderPlanes, {
-    start: [11000, 0],
+    start: [10, 2000],
     connect : true,
     range: range_sliderPlanes,
     pips: {
@@ -77,13 +87,13 @@ noUiSlider.create(sliderPlanes, {
 });
 
 var range_sliderAngle = {
-    'min': [     0 ],
+    'min': [  0 ],
     'max': [ 90 ]
 };
 
 
 noUiSlider.create(sliderAngle, {
-    start: [0, 90],
+    start: [20, 60],
     connect : true,
     range: range_sliderAngle,
     pips: {
@@ -91,6 +101,42 @@ noUiSlider.create(sliderAngle, {
         density: 3
     }
 });
+
+
+function compute_results() {
+    toggle_loading(true)
+
+    let rangeNeighboor = sliderNeighboor.noUiSlider.get();
+    let rangeGreenSpacesAltitude = sliderGreenSpacesAltitude.noUiSlider.get();
+    let rangePlanes = sliderPlanes.noUiSlider.get();
+    let rangeAngle = sliderAngle.noUiSlider.get();
+    let ranking_method = method_selector.options[method_selector.selectedIndex].text
+    let nb_results = input_nb_result.value
+
+    console.log(ranking_method)
+
+    rank_green_space_based_on_flight_path(
+        3, 8000,
+        rangeGreenSpacesAltitude[0], rangeGreenSpacesAltitude[1],
+        rangePlanes[0], rangePlanes[1],
+        rangeAngle[0], rangeAngle[1],
+        nb_results
+    )
+
+
+    // rank_green_space_based_on_flight_path(
+    //     30, 8000,
+    //     50, 999999,
+    //     1000, 1500,
+    //     15, 50,
+    //     10
+    // )
+    rank_green_spaces_based_on_population_density()
+    final_score_evaluation(ranking_method)
+    show_best_green_spaces(15)
+
+    toggle_loading(false)
+}
 
 
 
@@ -207,18 +253,7 @@ function pre_populate_rankings() {
 async function draw_layers() {
     draw_neighborhood()
     draw_green_spaces()
-    //draw_flights()
-
-    rank_green_space_based_on_flight_path(
-        30, 8000,
-        50, 999999,
-        1000, 1500,
-        15, 50,
-        10
-    )
-    rank_green_spaces_based_on_population_density()
-    final_score_evaluation("I_hate_buildings")
-    show_best_green_spaces(15)
+    draw_flights()
 }
 
 //logique de chargement et affichage des données
