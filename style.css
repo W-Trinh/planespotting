@@ -168,6 +168,10 @@ input[type = "range"]{
     align-items: flex-start;
 }
 
+#neihbor {
+    display: none;
+}
+
 #input-filtre{
     width: 30%;
 }
@@ -310,5 +314,5 @@ input[type = "range"]{
     background: linear-gradient(to right, #FF3333 , #40FF33);
 }
 #gradient-population  {
-    background: linear-gradient(to right, #000 20%, #FCB814 20%, #6BCFF6);
+    background: linear-gradient(to right, #4C4C4C 20%, #FCB814 20%, #6BCFF6);
 }
