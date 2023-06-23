@@ -169,8 +169,8 @@ const flgt_prb = L.layerGroup()
 const rank_lyr = L.layerGroup()
 
 const overlayMaps = {
-    "labels et markers": mrkr_lbl,
-    "flights points": flgt_pos,
+    // "labels et markers": mrkr_lbl,
+    // "flights points": flgt_pos,
     "fligths trajectories": flgt_pth,
     "Green spaces avg altitude": grsp_ava,
     "Neighborhood population": nbgh_pop,
