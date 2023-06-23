@@ -181,7 +181,7 @@ const overlayMaps = {
 const map = L.map('map', {
     center: [43.60058737045903, 1.4407218792739667],
     zoom: 14,
-    layers: [base_map, flgt_pth, grsp_ava, nbgh_pop, rank_lyr]
+    layers: [base_map] //, flgt_pth, grsp_ava, nbgh_pop, rank_lyr]
 });
 
 const layerControl = L.control.layers({}, overlayMaps).addTo(map)
