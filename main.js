@@ -36,7 +36,7 @@ var range_sliderNeighboor = {
 
 
 noUiSlider.create(sliderNeighboor, {
-    start: [30000, 1],
+    start: [3000, 7000],
     connect : true,
     range: range_sliderNeighboor,
     pips: {
@@ -51,7 +51,7 @@ var range_sliderGreenSpacesAltitude = {
 };
 
 noUiSlider.create(sliderGreenSpacesAltitude, {
-    start: [250, 120],
+    start: [140, 210],
     connect : true,
     range: range_sliderGreenSpacesAltitude,
     pips: {
@@ -67,7 +67,7 @@ var range_sliderPlanes = {
 
 
 noUiSlider.create(sliderPlanes, {
-    start: [11000, 0],
+    start: [200, 3000],
     connect : true,
     range: range_sliderPlanes,
     pips: {
